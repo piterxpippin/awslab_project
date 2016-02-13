@@ -10,13 +10,7 @@ function extractAwsCredentials() {
 function getS3Policy() {
     var path = require('path');
     var pathToFile = path.join(__dirname, 'policy.json');
-    return JSON.parse(fs.readFileSync(pathToFile, 'utf8'), function(key, value) {
-        if (key === "conditions") {
-            console.log(value[1][2]);
-        }
-
-        return value;
-    });
+    return JSON.parse(fs.readFileSync(pathToFile, 'utf8'));
 }
 
 function generateS3Credentials() {
