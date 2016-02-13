@@ -1,0 +1,37 @@
+extends layout
+
+block content
+
+  div(class='container')
+    div(class='col-sm-4')
+      h3 Cześć!
+      p abcdef
+      p sfbafg
+
+    div(class='col-sm-4')
+      h3 Siema!
+      p aethaeth
+      p aerghaesrh
+
+    div(class='col-sm-4')
+      h3 Hejka!
+      p aethseth
+      p asdafaetqgeg
+
+    form(action='https://pawlak-aws-project.s3.amazonaws.com/', method='POST', class='form-horizontal', enctype='multipart/form-data')
+      input(type='hidden', name='key', value='#{ key }')
+      input(type='hidden', name='AWSAccessKeyId', value='#{ awsAccessKeyId }')
+      input(type='hidden', name='acl', value='public-read')
+      input(type='hidden', name='success_action_redirect', value='http://localhost:#{ port }/')
+      input(type='hidden', name='policy', value='#{ policy }')
+      input(type='hidden', name='signature', value='#{ signature }')
+      input(type='hidden', name='Content-Type', value='image/*')
+
+      .form-group
+        label(for='fileDescription') File description
+        input#fileDescription.form-control(type='text')
+      .form-group
+        label(for='inputFile') File input
+        input#inputFile(name='file', type='file', accept='image/*')
+        p.help-block Add picture to bucket
+      button.btn.btn-default(type='submit') Submit

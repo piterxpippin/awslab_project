@@ -1,0 +1,11 @@
+{
+    "expiration": "2016-02-15T00:00:00Z",
+    "conditions": [
+        { "bucket": "pawlak-aws-project" }, 
+        ["starts-with", "$key", "piotr.pawlak/"], 
+        { "acl": "public-read" }, 
+        { "success_action_redirect": "http://localhost:3000/" }, 
+        ["content-length-range", 0, 1048576], 
+        ["eq", "$Content-Type", "image/*"]
+    ]
+}
