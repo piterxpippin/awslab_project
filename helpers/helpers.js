@@ -1,14 +1,13 @@
 var fs = require('fs');
 var crypto = require('crypto');
+var path = require('path');
 
 function extractAwsCredentials() {
-    var path = require('path');
     var pathToFile = path.join(__dirname, '../config.json');
     return JSON.parse(fs.readFileSync(pathToFile, 'utf8'));
 };
 
 function getS3Policy() {
-    var path = require('path');
     var pathToFile = path.join(__dirname, 'policy.json');
     return JSON.parse(fs.readFileSync(pathToFile, 'utf8'));
 }
