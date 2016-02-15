@@ -22,7 +22,7 @@ block content
       input(type='hidden', name='key', value='#{ key }')
       input(type='hidden', name='AWSAccessKeyId', value='#{ awsAccessKeyId }')
       input(type='hidden', name='acl', value='public-read')
-      input(type='hidden', name='success_action_redirect', value='http://localhost:#{ port }/')
+      input(type='hidden', name='success_action_redirect', value='#{ successActionRedirect }')
       input(type='hidden', name='policy', value='#{ policy }')
       input(type='hidden', name='signature', value='#{ signature }')
       input(type='hidden', name='Content-Type', value='image/*')

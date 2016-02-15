@@ -1,6 +1,14 @@
 var fs = require('fs');
 var crypto = require('crypto');
 var path = require('path');
+var AWS = require('aws-sdk');
+
+var credentials = extractAwsCredentials();
+
+AWS.config.accessKeyId = credentials.accessKeyId;
+AWS.config.secretAccessKey = credentials.secretAccessKey;
+AWS.config.region = credentials.region;
+AWS.config.logger = process.stdout;
 
 function getS3Policy() {
     var pathToFile = path.join(__dirname, 'policy.json');
@@ -31,7 +39,6 @@ function getSignature(credentials, policyBase) {
 
 function generateS3Credentials() {
     var policy = getS3Policy();
-    var credentials = extractAwsCredentials();
 
     var s3PolicyBase = getPolicyBase64(policy);
     var signature = getSignature(credentials, s3PolicyBase);
@@ -40,9 +47,63 @@ function generateS3Credentials() {
         s3PolicyBase64: s3PolicyBase,
         s3Signature: signature,
         s3Key: credentials.accessKeyId,
-        s3Redirect: "http://localhost:3000/",
+        s3Redirect: "http://localhost:3000/logEvent",
         s3Policy: policy
     }
 };
 
+function createDomain(simpleDb) {
+    simpleDb = new AWS.SimpleDB();
+    var params = {
+        DomainName: 'pawlak-aws-logs'
+    };
+
+    simpleDb.createDomain(params, function(err, data) {
+        if (err) console.log(err, err.stack); // an error occurred
+        else     console.log(data);           // successful response
+    });
+}
+
+function logUpload() {
+    var pattern = /piotr\.pawlak%2F(.*)/i;
+    console.log(pattern.exec(key));
+    var simpleDb = new AWS.SimpleDB();
+    createDomain(simpleDb);
+    var putParams = {
+        Attributes: [ {
+            Name: 'Time and date',
+            Value: new Date().toISOString(),
+            Replace: false
+        }, {
+            Name: 'Filename',
+            Value: pattern.exec(key),
+            Replace: false
+        } ],
+        DomainName: 'pawlak-aws-logs',
+        ItemName: 'uploadEvents'
+    };
+
+    simpleDb.putAttributes(putParams, function(err, data) {
+        if (err) console.log(err, err.stack); // an error occurred
+        else     console.log(data);           // successful response
+    });
+}
+
+function getPar() {
+    var simpleDb = new AWS.SimpleDB();
+    var getParams = {
+        DomainName: 'pawlak-aws-logs',
+        ItemName: 'uploadEvents',
+        ConsistentRead: true
+    };
+
+    simpleDb.getAttributes(getParams, function(err, data) {
+        if (err) console.log(err, err.stack); // an error occurred
+        else     console.log(data);           // successful response
+    });
+}
+
+exports.extractAwsCredentials = extractAwsCredentials;
 exports.generateS3Credentials = generateS3Credentials;
+exports.logUpload = logUpload;
+exports.getPar = getPar;
