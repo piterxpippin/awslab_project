@@ -72,11 +72,7 @@ function logUpload() {
             Name: 'Time and date',
             Value: new Date().toISOString(),
             Replace: false
-        }, {
-            Name: 'Filename',
-            Value: pattern.exec(key),
-            Replace: false
-        } ],
+        }],
         DomainName: 'pawlak-aws-logs',
         ItemName: 'uploadEvents'
     };
