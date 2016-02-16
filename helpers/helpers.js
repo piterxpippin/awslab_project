@@ -65,8 +65,6 @@ function createDomain(simpleDb) {
 }
 
 function logUpload() {
-    var pattern = /piotr\.pawlak%2F(.*)/i;
-    console.log(pattern.exec(key));
     var simpleDb = new AWS.SimpleDB();
     createDomain(simpleDb);
     var putParams = {
