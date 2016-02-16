@@ -1,0 +1,8 @@
+extends layout
+
+block content
+    div(class = 'container')
+        h1(style = 'text-align: center') Photo gallery!
+        each val in imageContent
+            div(class = 'divClass')
+                img(src = val)
