@@ -1,38 +1,47 @@
 doctype html
 html
-  head
-    title= title
-    meta(charset='utf-8')
-    meta(name='viewport', content='width=device-width, initial-scale=1.0')
-    
-    link(rel='stylesheet', href='stylesheets/bootstrap.min.css')
-    script(src='javascripts/jquery.min.js')
-    script(src='javascripts/bootstrap.min.js')
-    style.
-        div.divClass {
-        width: 205px;
-        height: 205px;
-        padding: 10px 10px 10px 10px;
-        margin: 10px 10px 10px 10px;
-        float: left;
-        border-style: double;
-        border-width: 5px;
-        border-color: green;
-        position: relative
-        }
+    head
+        title= title
+        meta(charset='utf-8')
+        meta(name='viewport', content='width=device-width, initial-scale=1.0')
 
-        div.divClass img {
-        position: relative;
-        max-width: 175px;
-        max-height: 175px;
-        margin: 0;
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        margin-right: -50%;
-        transform: translate(-50%, -50%);
-        }
+        link(rel='stylesheet', href='stylesheets/bootstrap.min.css')
+        script(src='javascripts/jquery.min.js')
+        script(src='javascripts/bootstrap.min.js')
+        style.
+            div.divClass {
+            width: 205px;
+            height: 205px;
+            padding: 10px 10px 10px 10px;
+            margin: 10px 10px 10px 10px;
+            float: left;
+            border-style: double;
+            border-width: 5px;
+            border-color: green;
+            position: relative
+            }
 
-  body
-    block content
+            div.divClass img {
+            position: relative;
+            max-width: 175px;
+            max-height: 175px;
+            margin: 0;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            margin-right: -50%;
+            transform: translate(-50%, -50%);
+            }
+            
+            button.buttonGallery {
+            cursor: not-allowed;
+            filter: alpha(opacity=65);
+            -webkit-box-shadow: none;
+            box-shadow: none;
+            opacity: .65;
+            margin-left: 100px;
+            }
+
+    body
+        block content
   

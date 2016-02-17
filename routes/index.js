@@ -8,7 +8,7 @@ var PORT = 3000;
 router.get('/', function(req, res, next) {
     var s3Credentials = H.generateS3Credentials();
     res.render('index', { 
-        title: 'Express',
+        title: 'AWS Project',
         key: 'piotr.pawlak/${filename}',
         awsAccessKeyId: s3Credentials.s3Key,
         successActionRedirect: s3Credentials.s3Redirect,

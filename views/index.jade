@@ -1,37 +1,31 @@
 extends layout
 
 block content
+    h1(style = 'text-align: center') Welcome to AWS Project!
+    p(style = 'text-align: center') Select an image to upload to AWS Cloud Storage
+    div(class='container')
+        br
+        br
+        form(action='https://pawlak-aws-project.s3.amazonaws.com/', method='POST', class='form-horizontal', enctype='multipart/form-data')
+            input(type='hidden', name='key', value='#{ key }')
+            input(type='hidden', name='AWSAccessKeyId', value='#{ awsAccessKeyId }')
+            input(type='hidden', name='acl', value='public-read')
+            input(type='hidden', name='success_action_redirect', value='#{ successActionRedirect }')
+            input(type='hidden', name='policy', value='#{ policy }')
+            input(type='hidden', name='signature', value='#{ signature }')
+            input(type='hidden', name='Content-Type', value='image/*')
 
-  div(class='container')
-    div(class='col-sm-4')
-      h3 Cześć!
-      p abcdef
-      p sfbafg
+            .form-group
+            label(for='fileDescription') File description
+            input#fileDescription.form-control(type='text')
+            .form-group
+            label(for='inputFile') File input
+            input#inputFile(name='file', type='file', accept='image/*')
+            p.help-block Add picture to bucket
+            button.btn.btn-default(type='submit') Submit
 
-    div(class='col-sm-4')
-      h3 Siema!
-      p aethaeth
-      p aerghaesrh
-
-    div(class='col-sm-4')
-      h3 Hejka!
-      p aethseth
-      p asdafaetqgeg
-
-    form(action='https://pawlak-aws-project.s3.amazonaws.com/', method='POST', class='form-horizontal', enctype='multipart/form-data')
-      input(type='hidden', name='key', value='#{ key }')
-      input(type='hidden', name='AWSAccessKeyId', value='#{ awsAccessKeyId }')
-      input(type='hidden', name='acl', value='public-read')
-      input(type='hidden', name='success_action_redirect', value='#{ successActionRedirect }')
-      input(type='hidden', name='policy', value='#{ policy }')
-      input(type='hidden', name='signature', value='#{ signature }')
-      input(type='hidden', name='Content-Type', value='image/*')
-
-      .form-group
-        label(for='fileDescription') File description
-        input#fileDescription.form-control(type='text')
-      .form-group
-        label(for='inputFile') File input
-        input#inputFile(name='file', type='file', accept='image/*')
-        p.help-block Add picture to bucket
-      button.btn.btn-default(type='submit') Submit
+    div(class='container')        
+        h1(style = 'text-align: center') See all uploaded pictures!
+        p(style = 'text-align: center;') Browse the gallery and set the sepia effect
+            br
+            button.btn.btn-default(style = 'margin-top: 20px;', type='submit', onclick="location.href='/pictureGallery';") Go to picture gallery!
