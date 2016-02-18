@@ -47,8 +47,7 @@ router.get('/pictureGallery', function(req, res, next) {
         if (err) console.log(err, err.stack); // an error occurred
         else {
             for (var i = 1; i < data.Contents.length; i++) {
-                imagesList[i] = (s3root + data.Contents[i].Key);
-                console.log("ImageURL: " + imagesList[i]);
+                imagesList.push(s3root + data.Contents[i].Key);
             }
             console.log(imagesList);
             res.render('pictureGallery', {

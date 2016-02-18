@@ -11,15 +11,20 @@ var queueURL = 'https://sqs.us-west-2.amazonaws.com/983680736795/PawlakSQS';
 
 var messages = [];
 
-var app = consumer.create({
+var daemon = consumer.create({
     queueUrl: queueURL,
     batchSize: 10,
     handleMessage: function (message, done) {
 
         var msgBody = JSON.parse(message.Body);
         messages.push(msgBody);
-        console.log(msgBody);
         console.log("\n");
+        console.log("********************************************");
+        console.log(msgBody);
+        console.log("********************************************");
+        console.log("\n");        
+
+
         router.get('/', function(req, res, next) {
             res.render('worker-index', { 
                 title: 'AWS Project - SQS worker logs',
@@ -36,11 +41,11 @@ var app = consumer.create({
     }
 });
 
-app.on('error', function (err) {
+daemon.on('error', function (err) {
     console.log(err);
 });
 
-app.start();
+daemon.start();
 
 
 /* GET home page. */

@@ -2,12 +2,29 @@ extends layout
 
 block content
     div(class = 'container')
-        h1(style = 'text-align: center') Photo gallery!
+        h1(style = 'text-align: center') Images gallery!
+        p(style = 'text-align: center') Choose images to apply SEPIA EFFECT.
+        p(style = 'text-align: center') Then click on "Apply sepia" button to get sepia-ed pictures!
+        p(style = 'text-align: center') (Max. 10 pictures can be selected. If more is chosen, first 10 will be taken!)
+        - var count = 1
         each val in imagesList
             div(class = 'divClass')
-                img(src = val)
+                img(id='image' + count, src = val)
+                input.checkboxed(id='checkbox' + count, type='checkbox', checked=false)
+                - count++
         
                 
     div(class = 'container')
         button.btn.btn-default(type='submit', onclick="location.href='/';") Back
     
+    
+    style.
+        .checkboxed
+        {
+            width:30px;
+            height:30px;
+            border-style: double;
+            border-width: 5px;
+            border-color: blue;
+            position: relative;
+        }
