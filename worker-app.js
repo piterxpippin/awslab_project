@@ -32,6 +32,27 @@ worker.locals.moment = require('moment');
 
 worker.use('/', routes);
 
+var io = require('socket.io').listen(worker); // this tells socket.io to use our express server
+
+io.sockets.on('connection', function (socket) {
+    console.log('A new user connected!!');
+});
+
+io.sockets.on('message', function (message) {
+    console.log('A new socketIO message received: ' + message);
+    io.emit('message', message);
+});
+io.sockets.on('error', function(message) {
+    console.log('Socket IO Error: ' + message);
+    io.emit('message', message);
+});
+io.sockets.on('close', function() {
+    console.log('Closing socketIO');
+    io.emit('finish', 'Process completed.');
+});
+worker.set('socketio', io);
+
+
 // catch 404 and forward to error handler
 worker.use(function(req, res, next) {
   var err = new Error('Not Found');

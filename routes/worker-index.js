@@ -45,6 +45,17 @@ app.start();
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
+    var socketio = req.app.get('socketio');
+    var socket = socketio.connect(); 
+
+    socket.on('message', function (data) {
+        $("#results").text(data);
+    });
+
+    socket.on('finish', function (data) {
+        $("#results").text(data);
+    });
+    
     res.render('worker-index', { 
         title: 'AWS Project - SQS worker logs',
         awsAccessKeyId: s3Credentials.s3Key,
@@ -52,9 +63,9 @@ router.get('/', function(req, res, next) {
         port: PORT,
         policy: s3Credentials.s3PolicyBase64,
         signature: s3Credentials.s3Signature,
-        messages: messages
     });
 });
+
 
 
 module.exports = router;
