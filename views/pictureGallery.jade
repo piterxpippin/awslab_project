@@ -3,9 +3,10 @@ extends layout
 block content
     div(class = 'container')
         h1(style = 'text-align: center') Photo gallery!
-        each val in imageContent
+        each val in imagesList
             div(class = 'divClass')
                 img(src = val)
+        
                 
     div(class = 'container')
         button.btn.btn-default(type='submit', onclick="location.href='/';") Back

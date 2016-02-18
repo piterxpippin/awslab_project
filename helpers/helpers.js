@@ -97,7 +97,74 @@ function getPar() {
     });
 }
 
+function listS3Images(s3, rootUrl, params) {
+    var contents = [];
+    
+    s3.listObjects(params, function(err, data) {
+        if (err) console.log(err, err.stack); // an error occurred
+        else {
+            for (var i = 1; i < data.Contents.length; i++) {
+                contents[i] = (rootUrl + data.Contents[i].Key);
+                console.log("ImageURL: " + contents[i]);
+            }
+            
+            console.log(contents);
+            return contents;
+        }    
+    });
+
+}
+
+function sendSqsMessage(sqs, queueUrl, message) {    
+    var msg = { payload: message };
+
+    var sqsParams = {
+        MessageBody: JSON.stringify(msg),
+        QueueUrl: queueUrl
+    };
+
+    sqs.sendMessage(sqsParams, function(err, data) {
+        if (err) {
+            console.log('ERR', err);
+        }
+
+        console.log(data);
+    });
+}
+
+function receiveSqsMessage(sqs, queueUrl, params) {
+    var messageList = [];
+    sqs.receiveMessage(params, function(err, data) {
+        if (err) console.log(err, err.stack); // an error occurred
+        else {
+            console.log(data);           // successful response
+            var messages = data.Messages;
+            
+            messageList = messages.map(function(content){
+                console.log(content.Body);
+                return content.Body
+            });
+            
+            for (var i = 1; i < messages.length; i++) {
+                sqs.deleteMessage({
+                    "QueueUrl" : queueURL,
+                    "ReceiptHandle" : messages[i].ReceiptHandle
+                }, function(err, data) {
+                      if (err) console.log(err, err.stack); // an error occurred
+                      else     console.log("Deleted: " + data);           // successful response
+                });
+            }
+        }
+        console.log(messageList);
+    });
+    
+    return messageList;
+}
+
 exports.extractAwsCredentials = extractAwsCredentials;
 exports.generateS3Credentials = generateS3Credentials;
 exports.logUpload = logUpload;
 exports.getPar = getPar;
+exports.listS3Images = listS3Images;
+exports.sendSqsMessage = sendSqsMessage;
+exports.receiveSqsMessage = receiveSqsMessage;

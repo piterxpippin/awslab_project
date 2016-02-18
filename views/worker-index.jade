@@ -1,0 +1,10 @@
+extends layout
+
+block content
+    h1(style = 'text-align: center') Welcome to AWS Project!
+    p(style = 'text-align: center') Below are logs from SQS worker:
+
+    div(class='container')        
+        for msg in locals.messages
+            p [#{moment(Date.now()).format('YYYY-MM-DD HH:mm:ss.SSS')}] Received message: #{msg}
+            
