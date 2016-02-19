@@ -9,27 +9,28 @@ block content
             p(style = 'text-align: center') (Max. 10 pictures can be selected. If more is chosen, first 10 will be taken!)
         div
             button.btn.btn-default(type='submit', onclick="location.href='/';") Back
-            button.btn.btn-default.button-apply(type='submit', onclick="location.href='/';") Apply sepia
-        br
-        br
-        - var count = 1
+            button.btn.btn-default.button-apply(type='submit', onclick="#{sendImageForSepia('piotr.pawlak/predkosc-zabija.jpg')}") Apply sepia
+            br
+            br
+            - var count = 1
         each val in imagesList
             div(class = 'divClass')
-                img(id='image' + count, src = val)
-                input.checkboxed(id='checkbox' + count, type='checkbox', checked=false)
+                - var imageKey = val.split("/pawlak-aws-project/")[1];
+                img(id=imageKey, src = val)
+                label
+                    input.checkbox-class(id=imageKey, type='checkbox', checked=(true===false ? "checked" : undefined), onclick="#{toggleCheckBox(this)}")
                 - count++
-        
-                
+
     div(class = 'container')
         button.btn.btn-default(type='submit', onclick="location.href='/';") Back
-        button.btn.btn-default.button-apply(type='submit', onclick="location.href='/';") Apply sepia
+        button.btn.btn-default.button-apply(type='submit', onclick="#{sendImageForSepia('piotr.pawlak/predkosc-zabija.jpg')}") Apply sepia
         
     br
     br
     
     
     style.
-        .checkboxed
+        .checkbox-class
         {
             width:30px;
             height:30px;

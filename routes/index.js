@@ -51,7 +51,9 @@ router.get('/pictureGallery', function(req, res, next) {
             }
             console.log(imagesList);
             res.render('pictureGallery', {
-                imagesList: imagesList, 
+                imagesList: imagesList,
+                toggleCheckBox: H.toggleCheckBox,
+                sendImageForSepia: H.sendImageForSepia,
                 title: 'Picture Gallery'
             });
         }    
