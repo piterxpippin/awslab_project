@@ -1,6 +1,35 @@
 extends layout
 
 block content
+    script(type="text/javascript").
+        var selectedImages = [];
+        document.addEventListener("DOMContentLoaded", function(event) {
+            var inputs = document.getElementsByTagName("input");
+            for (var i=0; i < inputs.length; i++) {
+                if (inputs[i].type === "checkbox") {
+                    inputs[i].addEventListener('change', function(event) {
+                            if(event.target.checked) {
+                                selectedImages.push(event.target.id);
+                                alert(selectedImages.length);
+                            }
+                            else {
+                                var deselectedImageIndex = selectedImages.indexOf(event.target.id);
+                                selectedImages.splice(deselectedImageIndex, 1);
+                                alert(selectedImages.length);
+                            }
+                    });
+                }
+            }
+            /*
+            var applySepiaButtonUp = document.getElementById("applySepiaUp");
+            applySepiaButtonUp.addEventListener('click', function(event) {
+
+            });
+            var applySepiaButtonDown = document.getElementById("applySepiaDown");
+            applySepiaButtonDown.addEventListener('click', function(event) {
+                
+            });*/
+        });
     div(class = 'container')
         div
             h1(style = 'text-align: center') Images gallery!
@@ -9,7 +38,7 @@ block content
             p#toAppend(style = 'text-align: center') (Max. 10 pictures can be selected. If more is chosen, first 10 will be taken!)
         div
             button.btn.btn-default(type='submit', onclick="location.href='/';") Back
-            button.btn.btn-default.button-apply(type='submit', onclick="#{sendImageForSepia('piotr.pawlak/predkosc-zabija.jpg')}") Apply sepia
+            button#applySepiaUp.btn.btn-default.button-apply(type='submit', onclick="#{sendImagesForSepia(selectedImages)}") Apply sepia
             br
             br
             - var count = 1
@@ -23,7 +52,7 @@ block content
 
     div(class = 'container')
         button.btn.btn-default(type='submit', onclick="location.href='/';") Back
-        button.btn.btn-default.button-apply(type='submit', onclick="#{sendImageForSepia('piotr.pawlak/predkosc-zabija.jpg')}") Apply sepia
+        button#applySepiaDown.btn.btn-default.button-apply(type='submit', onclick="#{sendImagesForSepia(selectedImages)}") Apply sepia
         
     br
     br

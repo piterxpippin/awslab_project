@@ -170,19 +170,17 @@ function toggleCheckBox(box) {
     }
 };
 
-function sendImageForSepia(msg) {
+function sendImagesForSepia(selectedImages) {
+    
+    /* ONLY THIS FOR NOW */
+    console.log(selectedImages);
+    
+    /*
     var sqs = new AWS.SQS();
     var queueURL = 'https://sqs.us-west-2.amazonaws.com/983680736795/PawlakSQS';
+
     
-    console.log(msg);
-    /*
-    for (var i=0, len=imgs.length; i<len; i++) {
-        if ( imgs[i].id === 'piotr.pawlak/predkosc-zabija.jpg' ) {
-            sendSqsMessage(sqs, queueURL, imgs[i].id);
-        }
-    }
-    */
-    sendSqsMessage(sqs, queueURL, msg);
+    sendSqsMessage(sqs, queueURL, selectedImages);*/
 }
 exports.extractAwsCredentials = extractAwsCredentials;
 exports.generateS3Credentials = generateS3Credentials;
@@ -192,4 +190,4 @@ exports.listS3Images = listS3Images;
 exports.sendSqsMessage = sendSqsMessage;
 exports.receiveSqsMessage = receiveSqsMessage;
 exports.toggleCheckBox = toggleCheckBox;
-exports.sendImageForSepia = sendImageForSepia;
+exports.sendImagesForSepia = sendImagesForSepia;

@@ -42,7 +42,7 @@ router.get('/pictureGallery', function(req, res, next) {
     };
     
     var imagesList = [];
-    
+       
     s3.listObjects(listImagesParams, function(err, data) {
         if (err) console.log(err, err.stack); // an error occurred
         else {
@@ -52,8 +52,7 @@ router.get('/pictureGallery', function(req, res, next) {
             console.log(imagesList);
             res.render('pictureGallery', {
                 imagesList: imagesList,
-                toggleCheckBox: H.toggleCheckBox,
-                sendImageForSepia: H.sendImageForSepia,
+                sendImagesForSepia: H.sendImagesForSepia,
                 title: 'Picture Gallery'
             });
         }    
