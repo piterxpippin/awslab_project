@@ -6,7 +6,7 @@ block content
             h1(style = 'text-align: center') Images gallery!
             p(style = 'text-align: center') Choose images to apply SEPIA EFFECT.
             p(style = 'text-align: center') Then click on "Apply sepia" button to get sepia-ed pictures!
-            p(style = 'text-align: center') (Max. 10 pictures can be selected. If more is chosen, first 10 will be taken!)
+            p#toAppend(style = 'text-align: center') (Max. 10 pictures can be selected. If more is chosen, first 10 will be taken!)
         div
             button.btn.btn-default(type='submit', onclick="location.href='/';") Back
             button.btn.btn-default.button-apply(type='submit', onclick="#{sendImageForSepia('piotr.pawlak/predkosc-zabija.jpg')}") Apply sepia
@@ -18,7 +18,7 @@ block content
                 - var imageKey = val.split("/pawlak-aws-project/")[1];
                 img(id=imageKey, src = val)
                 label
-                    input.checkbox-class(id=imageKey, type='checkbox', checked=(true===false ? "checked" : undefined), onclick="#{toggleCheckBox(this)}")
+                    input.checkbox-class(id=imageKey, type='checkbox', checked=false)
                 - count++
 
     div(class = 'container')
@@ -45,3 +45,4 @@ block content
             margin-left: -50px;
             left: 50%;
         }
+        

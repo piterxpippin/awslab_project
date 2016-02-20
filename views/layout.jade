@@ -8,6 +8,24 @@ html
         link(rel='stylesheet', href='stylesheets/bootstrap.min.css')
         script(src='javascripts/jquery.min.js')
         script(src='javascripts/bootstrap.min.js')
+        script(type="text/javascript").
+            document.addEventListener("DOMContentLoaded", function(event) {
+                var inputs = document.getElementsByTagName("input");
+                for (var i=0; i < inputs.length; i++) {
+                    if (inputs[i].type === "checkbox") {
+                        inputs[i].addEventListener('change', function(event) {
+                                if(event.target.checked) {
+                                    alert("now it's checked");
+                                }
+                                else {
+                                    alert("now it's unchecked");
+                                }
+                        });
+                    }
+                }
+            });
+            
+        
         style.
             div.divClass {
             width: 205px;
