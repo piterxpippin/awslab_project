@@ -1,6 +1,7 @@
 extends layout
 
 block content
+    script(type="text/javascript") #{ sendImagesForSepia }
     script(type="text/javascript").
         var selectedImages = [];
         document.addEventListener("DOMContentLoaded", function(event) {
@@ -38,7 +39,7 @@ block content
             p#toAppend(style = 'text-align: center') (Max. 10 pictures can be selected. If more is chosen, first 10 will be taken!)
         div
             button.btn.btn-default(type='submit', onclick="location.href='/';") Back
-            button#applySepiaUp.btn.btn-default.button-apply(type='submit', onclick="#{sendImagesForSepia(selectedImages)}") Apply sepia
+            button#applySepiaUp.btn.btn-default.button-apply(type='submit', onclick="sendImagesForSepia(selectedImages)") Apply sepia
             br
             br
             - var count = 1
@@ -52,7 +53,7 @@ block content
 
     div(class = 'container')
         button.btn.btn-default(type='submit', onclick="location.href='/';") Back
-        button#applySepiaDown.btn.btn-default.button-apply(type='submit', onclick="#{sendImagesForSepia(selectedImages)}") Apply sepia
+        button#applySepiaDown.btn.btn-default.button-apply(type='submit', onclick="sendImagesForSepia(selectedImages)") Apply sepia
         
     br
     br
