@@ -1,6 +1,4 @@
-var fs = require('fs');
-var crypto = require('crypto');
-var path = require('path');
+var parser = require('body-parser');
 var AWS = require('aws-sdk');
 
 var credentials = extractAwsCredentials();
@@ -173,15 +171,14 @@ function toggleCheckBox(box) {
 function sendImagesForSepia(selectedImages) {
     
     /* ONLY THIS FOR NOW */
-    console.log(JSON.parse(selectedImages));
+    console.log(selectedImages);
     
     
-    /*
     var sqs = new AWS.SQS();
     var queueURL = 'https://sqs.us-west-2.amazonaws.com/983680736795/PawlakSQS';
 
     
-    sendSqsMessage(sqs, queueURL, selectedImages);*/
+    sendSqsMessage(sqs, queueURL, selectedImages);
 }
 exports.extractAwsCredentials = extractAwsCredentials;
 exports.generateS3Credentials = generateS3Credentials;

@@ -4,19 +4,30 @@ block content
     script(type="text/javascript") #{ sendImagesForSepia }
     script(type="text/javascript").
         var selectedImages = [];
+        var count = 1;
         document.addEventListener("DOMContentLoaded", function(event) {
             var inputs = document.getElementsByTagName("input");
             for (var i=0; i < inputs.length; i++) {
                 if (inputs[i].type === "checkbox") {
                     inputs[i].addEventListener('change', function(event) {
                             if(event.target.checked) {
-                                selectedImages.push(event.target.id);
-                                alert(selectedImages.length);
+                                var key = {
+                                    imageKey: event.target.id
+                                };
+                                selectedImages.push(key);
+                                console.log(event.target.id);
+                                console.log(key);
+                                console.log("Images: " + JSON.stringify(selectedImages));
                             }
                             else {
-                                var deselectedImageIndex = selectedImages.indexOf(event.target.id);
+                                console.log("IMAGE TARGET: " + event.target.id);
+                                var deselectedImageIndex = selectedImages.filter( function(obj) {
+                                    console.log(obj.index);
+                                    return obj.imageKey === event.target.id;
+                                });
                                 selectedImages.splice(deselectedImageIndex, 1);
-                                alert(selectedImages.length);
+                                console.log("removed: " + deselectedImageIndex);
+                                console.log("Images: " + JSON.stringify(selectedImages));
                             }
                     });
                 }
@@ -53,7 +64,9 @@ block content
 
     div(class = 'container')
         button.btn.btn-default(type='submit', onclick="location.href='/';") Back
-        button#applySepiaDown.btn.btn-default.button-apply(type='submit', onclick="sendImagesForSepia(selectedImages)") Apply sepia
+        form#imagesForSepiaForm(action='/pictureGallery', method='POST', class='form-horizontal')
+            input(type='hidden', name='keys', id='keys', value=JSON.stringify(selectedImages))
+            button#applySepiaDown.btn.btn-default.button-apply(type='submit', onclick="sendImagesForSepia(selectedImages)") Apply sepia
         
     br
     br

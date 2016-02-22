@@ -1,6 +1,7 @@
 var express = require('express');
 var router = express.Router();
 var AWS = require('aws-sdk');
+var bodyParser = require('body-parser');
 var H = require('../helpers/helpers.js');
 var PORT = 3000;
 
@@ -57,7 +58,18 @@ router.get('/pictureGallery', function(req, res, next) {
             });
         }    
     });
+
+router.use(bodyParser.json());       // to support JSON-encoded bodies
+router.use(bodyParser.urlencoded({     // to support URL-encoded bodies
+  extended: true
+})); 
     
+router.post('/pictureGallery', function(req, res) {
+    var imagesForSepia = req.body;
+    console.log(imagesForSepia);
+    console.log("dupa");
+});
+
     /*
     var msgParams = {
         QueueUrl: queueURL,
