@@ -59,7 +59,7 @@ router.post('/sendToSQS', function(req, res) {
     console.log(req.body);
     console.log(req.params);
     
-    H.sendImagesForSepia(JSON.parse(req.body.selectedImages));
+    H.sendSqsMessage(JSON.parse(req.body.selectedImages));
     res.redirect('/');
 });
 

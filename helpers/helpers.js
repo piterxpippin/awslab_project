@@ -117,7 +117,8 @@ function listS3Images(s3, rootUrl, params) {
 
 }
 
-function sendSqsMessage(sqs, queueUrl, message) {    
+function sendSqsMessage(message) {
+    var sqs = new AWS.SQS();
     var msg = { payload: message };
 
     var sqsParams = {
@@ -134,7 +135,8 @@ function sendSqsMessage(sqs, queueUrl, message) {
     });
 }
 
-function receiveSqsMessage(sqs, queueUrl, params) {
+function receiveSqsMessage(params) {
+    var sqs = new AWS.SQS();
     var messageList = [];
     sqs.receiveMessage(params, function(err, data) {
         if (err) console.log(err, err.stack); // an error occurred
@@ -163,11 +165,6 @@ function receiveSqsMessage(sqs, queueUrl, params) {
     return messageList;
 }
 
-function sendImagesForSepia(selectedImages) {
-    var sqs = new AWS.SQS();
-    sendSqsMessage(sqs, queueURL, selectedImages);
-}
-
 exports.queueURL = queueURL;
 exports.extractAwsCredentials = extractAwsCredentials;
 exports.generateS3Credentials = generateS3Credentials;
@@ -176,4 +173,3 @@ exports.getPar = getPar;
 exports.listS3Images = listS3Images;
 exports.sendSqsMessage = sendSqsMessage;
 exports.receiveSqsMessage = receiveSqsMessage;
-exports.sendImagesForSepia = sendImagesForSepia;

@@ -14,7 +14,7 @@ function applyToArray(arrayToBeAppliedTo, checkbox) {
     console.log(arrayToBeAppliedTo);
 }
 
-function convertToString() {
+function convertFilenameArrayToString() {
     document.getElementById('selectedImagesField').value = JSON.stringify(selectedImages);
     return true;
 }
