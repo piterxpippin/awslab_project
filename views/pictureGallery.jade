@@ -4,6 +4,8 @@ block content
     script(type="text/javascript") #{ sendImagesForSepia }
     script(type="text/javascript").
         var selectedImages = [];
+        var selectedImagesJSON;
+        var selectedImagesJSONstringified;
         var count = 1;
         document.addEventListener("DOMContentLoaded", function(event) {
             var inputs = document.getElementsByTagName("input");
@@ -21,17 +23,23 @@ block content
                             }
                             else {
                                 console.log("IMAGE TARGET: " + event.target.id);
-                                var deselectedImageIndex = selectedImages.filter( function(obj) {
-                                    console.log(obj.index);
-                                    return obj.imageKey === event.target.id;
-                                });
-                                selectedImages.splice(deselectedImageIndex, 1);
-                                console.log("removed: " + deselectedImageIndex);
                                 console.log("Images: " + JSON.stringify(selectedImages));
+                                var deselectedImageIndex = 0;
+                                for (var i = 0; i<selectedImages.length; i++) {
+                                    if (selectedImages[i].imageKey == event.target.id) {
+                                        deselectedImageIndex = i;
+                                        selectedImages.splice(deselectedImageIndex, 1);
+                                    }
+                                }
+                                console.log("removed at index: " + deselectedImageIndex);
+                                //selectedImagesJSON = JSON.parse("["+selectedImages+"]");
+                                selectedImagesJSONstringified = JSON.stringify(selectedImages);
+                                console.log("asdasd" + selectedImagesJSONstringified);
                             }
                     });
                 }
             }
+
             /*
             var applySepiaButtonUp = document.getElementById("applySepiaUp");
             applySepiaButtonUp.addEventListener('click', function(event) {
@@ -50,7 +58,7 @@ block content
             p#toAppend(style = 'text-align: center') (Max. 10 pictures can be selected. If more is chosen, first 10 will be taken!)
         div
             button.btn.btn-default(type='submit', onclick="location.href='/';") Back
-            button#applySepiaUp.btn.btn-default.button-apply(type='submit', onclick="sendImagesForSepia(selectedImages)") Apply sepia
+            button#applySepiaUp.btn.btn-default.button-apply(type='submit') Apply sepia
             br
             br
             - var count = 1
@@ -65,8 +73,8 @@ block content
     div(class = 'container')
         button.btn.btn-default(type='submit', onclick="location.href='/';") Back
         form#imagesForSepiaForm(action='/pictureGallery', method='POST', class='form-horizontal')
-            input(type='hidden', name='keys', id='keys', value=JSON.stringify(selectedImages))
-            button#applySepiaDown.btn.btn-default.button-apply(type='submit', onclick="sendImagesForSepia(selectedImages)") Apply sepia
+            input(type='hidden', name='keys', id='keys', value=selectedImagesJSONstringified)
+            button#applySepiaDown.btn.btn-default.button-apply(type='submit') Apply sepia
         
     br
     br
