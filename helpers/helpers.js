@@ -10,6 +10,8 @@ AWS.config.secretAccessKey = credentials.secretAccessKey;
 AWS.config.region = credentials.region;
 AWS.config.logger = process.stdout;
 
+var queueURL = 'https://sqs.us-west-2.amazonaws.com/983680736795/PawlakSQS';
+
 function getS3Policy() {
     var pathToFile = path.join(__dirname, 'policy.json');
     var policy = JSON.parse(fs.readFileSync(pathToFile, 'utf8'));
@@ -151,7 +153,7 @@ function receiveSqsMessage(sqs, queueUrl, params) {
                     "ReceiptHandle" : messages[i].ReceiptHandle
                 }, function(err, data) {
                       if (err) console.log(err, err.stack); // an error occurred
-                      else     console.log("Deleted: " + data);           // successful response
+                      else     console.log("Deleted: " + data); // successful response
                 });
             }
         }
@@ -161,28 +163,14 @@ function receiveSqsMessage(sqs, queueUrl, params) {
     return messageList;
 }
 
-function toggleCheckBox(box) {
-    if (box.checked) {
-        console.log("Clicked T, new value = " + box.checked);
-    }
-    else {
-        console.log("Clicked F, new value = " + box.checked);
-    }
-};
-
 function sendImagesForSepia(selectedImages) {
-    
-    /* ONLY THIS FOR NOW */
-    console.log(JSON.parse(selectedImages));
-    
-    
-    /*
+    var AWS = require('aws-sdk');
     var sqs = new AWS.SQS();
-    var queueURL = 'https://sqs.us-west-2.amazonaws.com/983680736795/PawlakSQS';
-
     
-    sendSqsMessage(sqs, queueURL, selectedImages);*/
+    sendSqsMessage(sqs, queueURL, selectedImages);
 }
+
+exports.queueURL = queueURL;
 exports.extractAwsCredentials = extractAwsCredentials;
 exports.generateS3Credentials = generateS3Credentials;
 exports.logUpload = logUpload;
@@ -190,5 +178,4 @@ exports.getPar = getPar;
 exports.listS3Images = listS3Images;
 exports.sendSqsMessage = sendSqsMessage;
 exports.receiveSqsMessage = receiveSqsMessage;
-exports.toggleCheckBox = toggleCheckBox;
 exports.sendImagesForSepia = sendImagesForSepia;

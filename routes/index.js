@@ -6,7 +6,6 @@ var H = require('../helpers/helpers.js');
 var PORT = 3000;
 
 var sqs = new AWS.SQS();
-var queueURL = 'https://sqs.us-west-2.amazonaws.com/983680736795/PawlakSQS';
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
@@ -25,12 +24,10 @@ router.get('/', function(req, res, next) {
 
 router.get('/logEvent', function(req, res, next) {
     H.logUpload();
-    H.sendSqsMessage(sqs, queueURL, "Logging event");
     res.redirect('/');
 });
 
 router.get('/pictureGallery', function(req, res, next) {
-    H.sendSqsMessage(sqs, queueURL, "Rendered picture gallery");
     var s3 = new AWS.S3();
     var s3root = 'https://s3-us-west-2.amazonaws.com/pawlak-aws-project/';
     var listImagesParams = {
@@ -50,41 +47,21 @@ router.get('/pictureGallery', function(req, res, next) {
             for (var i = 1; i < data.Contents.length; i++) {
                 imagesList.push(s3root + data.Contents[i].Key);
             }
-            console.log(imagesList);
+            
             res.render('pictureGallery', {
                 imagesList: imagesList,
-                sendImagesForSepia: H.sendImagesForSepia,
                 title: 'Picture Gallery'
             });
         }    
     });
-
-router.use(bodyParser.json());       // to support JSON-encoded bodies
-router.use(bodyParser.urlencoded({     // to support URL-encoded bodies
-  extended: true
-})); 
-    
-router.post('/pictureGallery', function(req, res) {
-    var imagesForSepia = req.body;
-    console.log(imagesForSepia);
-    console.log("dupa");
 });
 
-    /*
-    var msgParams = {
-        QueueUrl: queueURL,
-        AttributeNames: [
-        'All'
-        ],
-        MaxNumberOfMessages: 3,
-        MessageAttributeNames: [
-        'All'
-        ],
-        VisibilityTimeout: 0,
-        WaitTimeSeconds: 0
-    };
-    */
-
+router.post('/sendToSQS', function(req, res) {
+    console.log(req.body);
+    console.log(req.params);
+    
+    H.sendImagesForSepia(JSON.parse(req.body.selectedImages));
+    res.redirect('/');
 });
 
 module.exports = router;

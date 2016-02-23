@@ -1,99 +1,28 @@
 extends layout
 
 block content
-    script(type="text/javascript") #{ sendImagesForSepia }
-    script(type="text/javascript").
-        var selectedImages = [];
-        var selectedImagesJSON;
-        var selectedImagesJSONstringified;
-        var count = 1;
-        document.addEventListener("DOMContentLoaded", function(event) {
-            var inputs = document.getElementsByTagName("input");
-            for (var i=0; i < inputs.length; i++) {
-                if (inputs[i].type === "checkbox") {
-                    inputs[i].addEventListener('change', function(event) {
-                            if(event.target.checked) {
-                                var key = {
-                                    imageKey: event.target.id
-                                };
-                                selectedImages.push(key);
-                                console.log(event.target.id);
-                                console.log(key);
-                                console.log("Images: " + JSON.stringify(selectedImages));
-                            }
-                            else {
-                                console.log("IMAGE TARGET: " + event.target.id);
-                                console.log("Images: " + JSON.stringify(selectedImages));
-                                var deselectedImageIndex = 0;
-                                for (var i = 0; i<selectedImages.length; i++) {
-                                    if (selectedImages[i].imageKey == event.target.id) {
-                                        deselectedImageIndex = i;
-                                        selectedImages.splice(deselectedImageIndex, 1);
-                                    }
-                                }
-                                console.log("removed at index: " + deselectedImageIndex);
-                                //selectedImagesJSON = JSON.parse("["+selectedImages+"]");
-                                selectedImagesJSONstringified = JSON.stringify(selectedImages);
-                                console.log("asdasd" + selectedImagesJSONstringified);
-                            }
-                    });
-                }
-            }
-
-            /*
-            var applySepiaButtonUp = document.getElementById("applySepiaUp");
-            applySepiaButtonUp.addEventListener('click', function(event) {
-
-            });
-            var applySepiaButtonDown = document.getElementById("applySepiaDown");
-            applySepiaButtonDown.addEventListener('click', function(event) {
-                
-            });*/
-        });
+    script(src='javascripts/publicHelpers.js')
     div(class = 'container')
         div
             h1(style = 'text-align: center') Images gallery!
             p(style = 'text-align: center') Choose images to apply SEPIA EFFECT.
             p(style = 'text-align: center') Then click on "Apply sepia" button to get sepia-ed pictures!
-            p#toAppend(style = 'text-align: center') (Max. 10 pictures can be selected. If more is chosen, first 10 will be taken!)
+            p#toAppend(style = 'text-align: center') (Max. 10 pictures can be selected. If more is chosen, first 10 selected will be taken!)
         div
             button.btn.btn-default(type='submit', onclick="location.href='/';") Back
-            button#applySepiaUp.btn.btn-default.button-apply(type='submit') Apply sepia
+            form(action='/sendToSQS', method='POST', class='form-horizontal', enctype='application/json' onsubmit='convertToString()')
+                input(id='selectedImagesField', type='hidden', name='selectedImages' value='[]')
+                button#applySepiaDown.btn.btn-default(type='submit') Apply sepia
             br
             br
-            - var count = 1
         each val in imagesList
             div(class = 'divClass')
-                - var imageKey = val.split("/pawlak-aws-project/")[1];
-                img(id=imageKey, src = val)
-                label
-                    input.checkbox-class(id=imageKey, type='checkbox', checked=false)
-                - count++
+                - var imageKey = val.split("/pawlak-aws-project/")[1]
+                img(id = imageKey, src = val)
+                input(id = imageKey, class = 'checkbox-class', type='checkbox' onchange='applyToArray(selectedImages, this)')
 
     div(class = 'container')
         button.btn.btn-default(type='submit', onclick="location.href='/';") Back
-        form#imagesForSepiaForm(action='/pictureGallery', method='POST', class='form-horizontal')
-            input(type='hidden', name='keys', id='keys', value=selectedImagesJSONstringified)
-            button#applySepiaDown.btn.btn-default.button-apply(type='submit') Apply sepia
-        
-    br
-    br
-    
-    
-    style.
-        .checkbox-class
-        {
-            width:30px;
-            height:30px;
-            border-style: double;
-            border-width: 5px;
-            border-color: blue;
-            position: relative;
-        }
-        .button-apply
-        {
-            position: absolute;
-            margin-left: -50px;
-            left: 50%;
-        }
-        
+        form(action='/sendToSQS', method='POST', class='form-horizontal', enctype='application/json' onsubmit='convertToString()')
+            input(id='selectedImagesField', type='hidden', name='selectedImages' value='[]')
+            button#applySepiaDown.btn.btn-default(type='submit') Apply sepia
