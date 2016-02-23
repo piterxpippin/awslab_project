@@ -10,7 +10,7 @@ block content
             p#toAppend(style = 'text-align: center') (Max. 10 pictures can be selected. If more is chosen, first 10 selected will be taken!)
         div
             button.btn.btn-default(type='submit', onclick="location.href='/';") Back
-            form(action='/sendToSQS', method='POST', class='form-horizontal', enctype='application/json' onsubmit='convertToString()')
+            form(action='/sendToSQS', method='POST', class='form-horizontal', enctype='application/json' onsubmit='convertFilenameArrayToString()')
                 input(id='selectedImagesField', type='hidden', name='selectedImages' value='[]')
                 button#applySepiaDown.btn.btn-default(type='submit') Apply sepia
             br
@@ -23,6 +23,6 @@ block content
 
     div(class = 'container')
         button.btn.btn-default(type='submit', onclick="location.href='/';") Back
-        form(action='/sendToSQS', method='POST', class='form-horizontal', enctype='application/json' onsubmit='convertToString()')
+        form(action='/sendToSQS', method='POST', class='form-horizontal', enctype='application/json' onsubmit='convertFilenameArrayToString()')
             input(id='selectedImagesField', type='hidden', name='selectedImages' value='[]')
             button#applySepiaDown.btn.btn-default(type='submit') Apply sepia

@@ -164,9 +164,7 @@ function receiveSqsMessage(sqs, queueUrl, params) {
 }
 
 function sendImagesForSepia(selectedImages) {
-    var AWS = require('aws-sdk');
     var sqs = new AWS.SQS();
-    
     sendSqsMessage(sqs, queueURL, selectedImages);
 }
 

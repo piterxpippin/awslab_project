@@ -17,8 +17,7 @@ router.get('/', function(req, res, next) {
         successActionRedirect: s3Credentials.s3Redirect,
         port: PORT,
         policy: s3Credentials.s3PolicyBase64,
-        signature: s3Credentials.s3Signature,
-        sqs: sqs
+        signature: s3Credentials.s3Signature
     });
 });
 
