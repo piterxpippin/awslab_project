@@ -117,13 +117,16 @@ function listS3Images(s3, rootUrl, params) {
 
 }
 
-function sendSqsMessage(message) {
+function sendSqsMessage(msgType, msgContent) {
     var sqs = new AWS.SQS();
-    var msg = { payload: message };
+    var msgParams = {
+        type: msgType,
+        content: JSON.stringify(msgContent)
+    };
 
     var sqsParams = {
-        MessageBody: JSON.stringify(msg),
-        QueueUrl: queueUrl
+        MessageBody: JSON.stringify(msgParams),
+        QueueUrl: queueURL
     };
 
     sqs.sendMessage(sqsParams, function(err, data) {

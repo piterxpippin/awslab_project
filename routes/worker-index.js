@@ -17,12 +17,15 @@ var daemon = consumer.create({
     handleMessage: function (message, done) {
 
         var msgBody = JSON.parse(message.Body);
-        messages.push(msgBody);
+        var msgType = msgBody.type;
+        var msgContent = msgBody.content;
+        messages.push(JSON.stringify(msgBody));
         console.log("\n");
         console.log("********************************************");
-        console.log(msgBody);
+        console.log("Type: " + msgBody.type);
+        console.log("Content: " + msgBody.content);
         console.log("********************************************");
-        console.log("\n");        
+        console.log("\n");
 
 
         router.get('/', function(req, res, next) {
