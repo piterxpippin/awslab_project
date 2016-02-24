@@ -7,12 +7,11 @@ var consumer = require('sqs-consumer');
 var PORT = 5000;
 var s3Credentials = H.generateS3Credentials();
 var sqs = new AWS.SQS();
-var queueURL = 'https://sqs.us-west-2.amazonaws.com/983680736795/PawlakSQS';
 
 var messages = [];
 
 var daemon = consumer.create({
-    queueUrl: queueURL,
+    queueUrl: H.sqsURL,
     batchSize: 10,
     handleMessage: function (message, done) {
 
@@ -22,11 +21,23 @@ var daemon = consumer.create({
         messages.push(JSON.stringify(msgBody));
         console.log("\n");
         console.log("********************************************");
-        console.log("Type: " + msgBody.type);
-        console.log("Content: " + msgBody.content);
+        console.log("Type: " + msgType);
+        console.log("Content: " + msgContent);
+        console.log("Content length: " + msgContent.length);
+        console.log("Content length origin: " + msgBody.content.length);
         console.log("********************************************");
         console.log("\n");
+        
+        var imagesList = JSON.parse(msgContent);
+        
+        if (msgType == "applySepia") {
+            for (var i=0; i<imagesList.length; i++) {
+                var fileName = H.downloadS3Image(imagesList[i]);
+                console.log("Image on disk: " + fileName);
+            }
+        }
 
+        
 
         router.get('/', function(req, res, next) {
             res.render('worker-index', { 

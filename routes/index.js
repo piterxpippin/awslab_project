@@ -28,9 +28,9 @@ router.get('/logEvent', function(req, res, next) {
 
 router.get('/pictureGallery', function(req, res, next) {
     var s3 = new AWS.S3();
-    var s3root = 'https://s3-us-west-2.amazonaws.com/pawlak-aws-project/';
+    var s3root = H.s3URL;
     var listImagesParams = {
-        Bucket: 'pawlak-aws-project', /* required */
+        Bucket: H.s3Bucket, /* required */
         Delimiter: ';',
         EncodingType: 'url',
         Marker: 'AA',
@@ -56,7 +56,10 @@ router.get('/pictureGallery', function(req, res, next) {
 });
 
 router.post('/sendToSQS', function(req, res) {
+    console.log("POST request received!");
+    console.log("POST request body: ");
     console.log(req.body);
+    console.log("POST request params: ");
     console.log(req.params);
     
     H.sendSqsMessage("applySepia", JSON.parse(req.body.selectedImages));

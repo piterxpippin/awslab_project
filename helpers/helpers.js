@@ -2,6 +2,7 @@ var fs = require('fs');
 var crypto = require('crypto');
 var path = require('path');
 var AWS = require('aws-sdk');
+var fileSystem = require('fs');
 
 var credentials = extractAwsCredentials();
 
@@ -10,7 +11,9 @@ AWS.config.secretAccessKey = credentials.secretAccessKey;
 AWS.config.region = credentials.region;
 AWS.config.logger = process.stdout;
 
-var queueURL = 'https://sqs.us-west-2.amazonaws.com/983680736795/PawlakSQS';
+var sqsURL = 'https://sqs.us-west-2.amazonaws.com/983680736795/PawlakSQS';
+var s3URL = 'https://s3-us-west-2.amazonaws.com/pawlak-aws-project/';
+var s3Bucket = 'pawlak-aws-project';
 
 function getS3Policy() {
     var pathToFile = path.join(__dirname, 'policy.json');
@@ -99,14 +102,17 @@ function getPar() {
     });
 }
 
-function listS3Images(s3, rootUrl, params) {
+function listS3Images(params) {
+    var s3 = new AWS.S3();
+    
     var contents = [];
     
     s3.listObjects(params, function(err, data) {
         if (err) console.log(err, err.stack); // an error occurred
         else {
             for (var i = 1; i < data.Contents.length; i++) {
-                contents[i] = (rootUrl + data.Contents[i].Key);
+                console.log("IMAGE: " + data.Contents[i]);
+                contents[i] = (s3URL + data.Contents[i].Key);
                 console.log("ImageURL: " + contents[i]);
             }
             
@@ -115,6 +121,25 @@ function listS3Images(s3, rootUrl, params) {
         }    
     });
 
+}
+
+function downloadS3Image(imageKey) {
+    var s3 = new AWS.S3();
+    var params = {
+        Bucket: s3Bucket,
+        Key: imageKey
+    };
+    var imageName = imageKey.split("/")[1];
+    var fileName = "E:\\aws_temp\\" + imageName;
+    var file = fileSystem.createWriteStream(fileName);
+    
+    console.log("\n");
+    console.log("Downloading: " + imageName);
+    console.log("Image will be saved to: " + fileName);
+    s3.getObject(params).createReadStream().pipe(file);
+    console.log("Image saved!");
+    
+    return fileName;
 }
 
 function sendSqsMessage(msgType, msgContent) {
@@ -126,7 +151,7 @@ function sendSqsMessage(msgType, msgContent) {
 
     var sqsParams = {
         MessageBody: JSON.stringify(msgParams),
-        QueueUrl: queueURL
+        QueueUrl: sqsURL
     };
 
     sqs.sendMessage(sqsParams, function(err, data) {
@@ -154,7 +179,7 @@ function receiveSqsMessage(params) {
             
             for (var i = 1; i < messages.length; i++) {
                 sqs.deleteMessage({
-                    "QueueUrl" : queueURL,
+                    "QueueUrl" : sqsURL,
                     "ReceiptHandle" : messages[i].ReceiptHandle
                 }, function(err, data) {
                       if (err) console.log(err, err.stack); // an error occurred
@@ -168,11 +193,14 @@ function receiveSqsMessage(params) {
     return messageList;
 }
 
-exports.queueURL = queueURL;
+exports.s3URL = s3URL;
+exports.s3Bucket = s3Bucket;
+exports.sqsURL = sqsURL;
 exports.extractAwsCredentials = extractAwsCredentials;
 exports.generateS3Credentials = generateS3Credentials;
 exports.logUpload = logUpload;
 exports.getPar = getPar;
 exports.listS3Images = listS3Images;
+exports.downloadS3Image = downloadS3Image;
 exports.sendSqsMessage = sendSqsMessage;
 exports.receiveSqsMessage = receiveSqsMessage;
