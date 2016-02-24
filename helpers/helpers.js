@@ -3,6 +3,7 @@ var crypto = require('crypto');
 var path = require('path');
 var AWS = require('aws-sdk');
 var fileSystem = require('fs');
+var gm = require('gm');
 
 var credentials = extractAwsCredentials();
 
@@ -142,6 +143,28 @@ function downloadS3Image(imageKey) {
     return fileName;
 }
 
+function applySepiaAndSave(directory, imageFile) {
+    var fileFullPath = directory + imageFile;
+    console.log("fileFullPath: " + fileFullPath);
+    var fileName = imageFile.split('.')[0];
+    console.log("fileName: " + fileName);
+    var extension = imageFile.split('.')[1];
+    console.log("extension: " + extension);
+    var fileNameAfterSepia = directory + fileName + '_sepia.' + extension;
+    console.log("fileNameAfterSepia: " + fileNameAfterSepia);
+    
+    gm(fileFullPath)
+    .sepia()
+    .write(fileNameAfterSepia, function(err){
+        if (err) console.log(err)
+        else {
+            console.log("Sepia applied to: " + fileNameAfterSepia);
+        }
+    });
+    
+    console.log("Sepia applied!");
+}
+
 function sendSqsMessage(msgType, msgContent) {
     var sqs = new AWS.SQS();
     var msgParams = {
@@ -202,5 +225,6 @@ exports.logUpload = logUpload;
 exports.getPar = getPar;
 exports.listS3Images = listS3Images;
 exports.downloadS3Image = downloadS3Image;
+exports.applySepiaAndSave = applySepiaAndSave;
 exports.sendSqsMessage = sendSqsMessage;
 exports.receiveSqsMessage = receiveSqsMessage;

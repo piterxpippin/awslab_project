@@ -32,8 +32,15 @@ var daemon = consumer.create({
         
         if (msgType == "applySepia") {
             for (var i=0; i<imagesList.length; i++) {
-                var fileName = H.downloadS3Image(imagesList[i]);
-                console.log("Image on disk: " + fileName);
+                var fullFilePath = H.downloadS3Image(imagesList[i]);
+                console.log("Image on disk: " + fullFilePath);
+                var lastBackslashIndex = fullFilePath.lastIndexOf("\\") + 1;
+                console.log(lastBackslashIndex);
+                var directory = fullFilePath.substring(0, lastBackslashIndex);
+                var name = fullFilePath.substring(lastBackslashIndex);
+                console.log(directory);
+                console.log(name);
+                H.applySepiaAndSave(directory, name);
             }
         }
 
