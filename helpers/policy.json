@@ -4,7 +4,7 @@
         { "bucket": "pawlak-aws-project" }, 
         [ "starts-with", "$key", "piotr.pawlak/" ], 
         { "acl": "public-read" }, 
-        { "success_action_redirect": "http://52.37.98.113:3000/logEvent" }, 
+        { "success_action_redirect": "http://localhost:3000/logEvent" }, 
         [ "content-length-range", 0, 1048576 ], 
         [ "eq", "$Content-Type", "image/*" ]
     ]
