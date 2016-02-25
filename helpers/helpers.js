@@ -4,6 +4,8 @@ var path = require('path');
 var AWS = require('aws-sdk');
 var gm = require('gm');
 
+var IP = "52.37.98.113";
+
 var credentials = extractAwsCredentials();
 
 AWS.config.accessKeyId = credentials.accessKeyId;
@@ -54,7 +56,7 @@ function generateS3Credentials() {
         s3PolicyBase64: s3PolicyBase,
         s3Signature: signature,
         s3Key: credentials.accessKeyId,
-        s3Redirect: "http://localhost:3000/logEvent",
+        s3Redirect: "http://" + IP + "/logEvent",
         s3Policy: policy
     }
 };
