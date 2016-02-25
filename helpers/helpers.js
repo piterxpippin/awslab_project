@@ -4,7 +4,7 @@ var path = require('path');
 var AWS = require('aws-sdk');
 var gm = require('gm');
 
-var IP = "52.37.98.113";
+var IP = "52.37.98.113:3000";
 
 var credentials = extractAwsCredentials();
 
