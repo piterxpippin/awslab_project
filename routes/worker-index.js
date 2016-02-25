@@ -5,7 +5,7 @@ var H = require('../helpers/helpers.js');
 var consumer = require('sqs-consumer');
 
 var PORT = 5000;
-var s3Credentials = H.generateS3Credentials();
+var s3Credentials = H.extractAwsCredentials();
 var sqs = new AWS.SQS();
 
 var messages = [];
