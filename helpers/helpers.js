@@ -17,7 +17,7 @@ var sqsURL = "https://sqs.us-west-2.amazonaws.com/983680736795/PawlakSQS";
 var s3URL = "https://s3-us-west-2.amazonaws.com/pawlak-aws-project/";
 var s3Bucket = "pawlak-aws-project";
 var s3Prefix = "piotr.pawlak/";
-var s3TempDirectory = "E:\\aws_temp\\";
+var s3TempDirectory = "/home/bitnami/aws_temp";
 
 function getS3Policy() {
     var pathToFile = path.join(__dirname, 'policy.json');
@@ -165,7 +165,7 @@ function imageGetSepiaUpload(imageKey) {
                 if (err) console.log(err);
                 else {
                     console.log("Image with sepia written to: " + imageNameAfterSepia);
-                    var lastBackslashIndex = imageNameAfterSepia.lastIndexOf("\\") + 1;
+                    var lastBackslashIndex = imageNameAfterSepia.lastIndexOf("/") + 1;
                     var sepiaImageKey = imageNameAfterSepia.substring(lastBackslashIndex);
                     console.log("sepiaImageKey: " + sepiaImageKey);
                     var fullKey = s3Prefix + sepiaImageKey;
