@@ -1,0 +1,11 @@
+extends layout
+
+block content
+    script(type='text/javascript').
+        $(document).ready(function () {
+            // Handler for .ready() called.
+            window.setTimeout(function () {
+                location.href = "/pictureGallery";
+            }, 5000);
+        });
+    h3 Successful sepia apply, redirecting to gallery...

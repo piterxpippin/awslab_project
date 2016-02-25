@@ -67,4 +67,10 @@ router.post('/sendToSQS', function(req, res) {
     res.redirect('/pictureGallery');
 });
 
+router.get('/sendToSQSSuccess', function(req, res) {
+    res.render('sqsSuccess', {
+        title: 'Redirecting...'
+    });
+});
+
 module.exports = router;
