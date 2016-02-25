@@ -2,7 +2,6 @@ var fs = require('fs');
 var crypto = require('crypto');
 var path = require('path');
 var AWS = require('aws-sdk');
-var fileSystem = require('fs');
 var gm = require('gm');
 
 var credentials = extractAwsCredentials();
@@ -124,45 +123,82 @@ function listS3Images(params) {
 
 }
 
-function downloadS3Image(imageKey) {
+function imageGetSepiaUpload(imageKey) {
     var s3 = new AWS.S3();
     var params = {
         Bucket: s3Bucket,
         Key: imageKey
     };
     var imageName = imageKey.split("/")[1];
-    var fileName = "E:\\aws_temp\\" + imageName;
-    var file = fileSystem.createWriteStream(fileName);
+    
+    var directory = "E:\\aws_temp\\";
+    var fileFullPath = directory + imageName;
+    console.log("fileFullPath: " + fileFullPath);
+    var fileNameNoExtension = imageName.split('.')[0];
+    console.log("fileNameNoExtension: " + fileNameNoExtension);
+    var extension = imageName.split('.')[1];
+    console.log("extension: " + extension);
+    var fileNameAfterSepia = directory + fileNameNoExtension + '_sepia.' + extension;
+    console.log("fileNameAfterSepia: " + fileNameAfterSepia);
     
     console.log("\n");
     console.log("Downloading: " + imageName);
-    console.log("Image will be saved to: " + fileName);
-    s3.getObject(params).createReadStream().pipe(file);
-    console.log("Image saved!");
+    console.log("Image will be saved to: " + fileFullPath);
     
-    return fileName;
-}
+    var imageDownloaded = fs.createWriteStream(fileFullPath);
 
-function applySepiaAndSave(directory, imageFile) {
-    var fileFullPath = directory + imageFile;
-    console.log("fileFullPath: " + fileFullPath);
-    var fileName = imageFile.split('.')[0];
-    console.log("fileName: " + fileName);
-    var extension = imageFile.split('.')[1];
-    console.log("extension: " + extension);
-    var fileNameAfterSepia = directory + fileName + '_sepia.' + extension;
-    console.log("fileNameAfterSepia: " + fileNameAfterSepia);
-    
-    gm(fileFullPath)
-    .sepia()
-    .write(fileNameAfterSepia, function(err){
-        if (err) console.log(err)
+    var downloadStream = s3.getObject(params).createReadStream().pipe(imageDownloaded);
+    downloadStream.on('finish', function(err, result) {
+        if (err) console.log(err);
         else {
-            console.log("Sepia applied to: " + fileNameAfterSepia);
+            console.log("File downloaded to: " + fileFullPath);
+            
+            gm(fileFullPath)
+            .sepia()
+            .write(fileNameAfterSepia, function(err, result) {
+                if (err) console.log(err);
+                else {
+                    console.log("File with sepia written to: " + fileNameAfterSepia);
+                    var lastBackslashIndex = fileNameAfterSepia.lastIndexOf("\\") + 1;
+                    console.log("lastBackslashIndex: " + lastBackslashIndex);
+                    var sepiaImageKey = fileNameAfterSepia.substring(lastBackslashIndex);
+                    console.log("sepiaImageKey: " + sepiaImageKey);
+                    var fullKey = "piotr.pawlak/" + sepiaImageKey;
+                    console.log("fullKey: " + fullKey);
+                    
+                    var fileBuffer = fs.readFile(fileNameAfterSepia, function(err, result) {
+                        if (err) console.log(err);
+                        else {
+                            console.log("RESULT");
+                            console.log(result);
+                            var metaData = "image/*";
+                            console.log("METADATA");
+                            console.log(metaData);
+
+                            var params = {
+                                ACL: 'public-read',
+                                Bucket: s3Bucket,
+                                Key: fullKey,
+                                Body: result,
+                                ContentType: metaData
+                            };
+
+                            s3.putObject(params, function(err, response) {
+                                console.log('uploaded file[' + fileNameAfterSepia + '] to [' + fullKey + '] as [' + metaData + ']');
+                                console.log("Deleting file: " + fileFullPath);
+                                fs.unlink(fileFullPath);
+                                console.log("Deleting file: " + fileNameAfterSepia);
+                                fs.unlink(fileNameAfterSepia);
+                                console.log("All temp files deleted");
+                            });
+                        }
+                    });
+                }
+            });
         }
     });
     
-    console.log("Sepia applied!");
+    return fileNameAfterSepia;
 }
 
 function sendSqsMessage(msgType, msgContent) {
@@ -224,7 +260,6 @@ exports.generateS3Credentials = generateS3Credentials;
 exports.logUpload = logUpload;
 exports.getPar = getPar;
 exports.listS3Images = listS3Images;
-exports.downloadS3Image = downloadS3Image;
-exports.applySepiaAndSave = applySepiaAndSave;
+exports.imageGetSepiaUpload = imageGetSepiaUpload;
 exports.sendSqsMessage = sendSqsMessage;
 exports.receiveSqsMessage = receiveSqsMessage;
