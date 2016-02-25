@@ -11,9 +11,11 @@ AWS.config.secretAccessKey = credentials.secretAccessKey;
 AWS.config.region = credentials.region;
 AWS.config.logger = process.stdout;
 
-var sqsURL = 'https://sqs.us-west-2.amazonaws.com/983680736795/PawlakSQS';
-var s3URL = 'https://s3-us-west-2.amazonaws.com/pawlak-aws-project/';
-var s3Bucket = 'pawlak-aws-project';
+var sqsURL = "https://sqs.us-west-2.amazonaws.com/983680736795/PawlakSQS";
+var s3URL = "https://s3-us-west-2.amazonaws.com/pawlak-aws-project/";
+var s3Bucket = "pawlak-aws-project";
+var s3Prefix = "piotr.pawlak/";
+var s3TempDirectory = "E:\\aws_temp\\";
 
 function getS3Policy() {
     var pathToFile = path.join(__dirname, 'policy.json');
@@ -111,7 +113,7 @@ function listS3Images(params) {
         if (err) console.log(err, err.stack); // an error occurred
         else {
             for (var i = 1; i < data.Contents.length; i++) {
-                console.log("IMAGE: " + data.Contents[i]);
+                console.log("Image processed: " + data.Contents[i]);
                 contents[i] = (s3URL + data.Contents[i].Key);
                 console.log("ImageURL: " + contents[i]);
             }
@@ -131,49 +133,43 @@ function imageGetSepiaUpload(imageKey) {
     };
     var imageName = imageKey.split("/")[1];
     
-    var directory = "E:\\aws_temp\\";
-    var fileFullPath = directory + imageName;
-    console.log("fileFullPath: " + fileFullPath);
-    var fileNameNoExtension = imageName.split('.')[0];
-    console.log("fileNameNoExtension: " + fileNameNoExtension);
+    var directory = s3TempDirectory;
+    var imageFullPath = directory + imageName;
+    console.log("imageFullPath: " + imageFullPath);
+    var imageNameNoExtension = imageName.split('.')[0];
+    console.log("imageNameNoExtension: " + imageNameNoExtension);
     var extension = imageName.split('.')[1];
     console.log("extension: " + extension);
-    var fileNameAfterSepia = directory + fileNameNoExtension + '_sepia.' + extension;
-    console.log("fileNameAfterSepia: " + fileNameAfterSepia);
+    var imageNameAfterSepia = directory + imageNameNoExtension + '_sepia.' + extension;
+    console.log("imageNameAfterSepia: " + imageNameAfterSepia);
     
     console.log("\n");
     console.log("Downloading: " + imageName);
-    console.log("Image will be saved to: " + fileFullPath);
     
-    var imageDownloaded = fs.createWriteStream(fileFullPath);
+    var imageDownloaded = fs.createWriteStream(imageFullPath);
 
     var downloadStream = s3.getObject(params).createReadStream().pipe(imageDownloaded);
     downloadStream.on('finish', function(err, result) {
         if (err) console.log(err);
         else {
-            console.log("File downloaded to: " + fileFullPath);
+            console.log("Applying sepia to image: " + imageFullPath);
             
-            gm(fileFullPath)
+            gm(imageFullPath)
             .sepia()
-            .write(fileNameAfterSepia, function(err, result) {
+            .write(imageNameAfterSepia, function(err, result) {
                 if (err) console.log(err);
                 else {
-                    console.log("File with sepia written to: " + fileNameAfterSepia);
-                    var lastBackslashIndex = fileNameAfterSepia.lastIndexOf("\\") + 1;
-                    console.log("lastBackslashIndex: " + lastBackslashIndex);
-                    var sepiaImageKey = fileNameAfterSepia.substring(lastBackslashIndex);
+                    console.log("Image with sepia written to: " + imageNameAfterSepia);
+                    var lastBackslashIndex = imageNameAfterSepia.lastIndexOf("\\") + 1;
+                    var sepiaImageKey = imageNameAfterSepia.substring(lastBackslashIndex);
                     console.log("sepiaImageKey: " + sepiaImageKey);
-                    var fullKey = "piotr.pawlak/" + sepiaImageKey;
+                    var fullKey = s3Prefix + sepiaImageKey;
                     console.log("fullKey: " + fullKey);
                     
-                    var fileBuffer = fs.readFile(fileNameAfterSepia, function(err, result) {
+                    var fileBuffer = fs.readFile(imageNameAfterSepia, function(err, result) {
                         if (err) console.log(err);
                         else {
-                            console.log("RESULT");
-                            console.log(result);
-                            var metaData = "image/*";
-                            console.log("METADATA");
-                            console.log(metaData);
+                            var metaData = 'image/*';
 
                             var params = {
                                 ACL: 'public-read',
@@ -184,12 +180,12 @@ function imageGetSepiaUpload(imageKey) {
                             };
 
                             s3.putObject(params, function(err, response) {
-                                console.log('uploaded file[' + fileNameAfterSepia + '] to [' + fullKey + '] as [' + metaData + ']');
-                                console.log("Deleting file: " + fileFullPath);
-                                fs.unlink(fileFullPath);
-                                console.log("Deleting file: " + fileNameAfterSepia);
-                                fs.unlink(fileNameAfterSepia);
-                                console.log("All temp files deleted");
+                                console.log("Uploaded file: [" + imageNameAfterSepia + "] to [" + fullKey + "] as [" + metaData + "]");
+                                console.log("Deleting temporary file: " + imageFullPath);
+                                fs.unlink(imageFullPath);
+                                console.log("Deleting temporary file: " + imageNameAfterSepia);
+                                fs.unlink(imageNameAfterSepia);
+                                console.log("All temp files deleted!");
                             });
                         }
                     });
@@ -197,8 +193,6 @@ function imageGetSepiaUpload(imageKey) {
             });
         }
     });
-    
-    return fileNameAfterSepia;
 }
 
 function sendSqsMessage(msgType, msgContent) {
@@ -215,7 +209,7 @@ function sendSqsMessage(msgType, msgContent) {
 
     sqs.sendMessage(sqsParams, function(err, data) {
         if (err) {
-            console.log('ERR', err);
+            console.log("ERR: ", err);
         }
 
         console.log(data);
@@ -254,6 +248,8 @@ function receiveSqsMessage(params) {
 
 exports.s3URL = s3URL;
 exports.s3Bucket = s3Bucket;
+exports.s3Prefix = s3Prefix;
+exports.s3TempDirectory = s3TempDirectory;
 exports.sqsURL = sqsURL;
 exports.extractAwsCredentials = extractAwsCredentials;
 exports.generateS3Credentials = generateS3Credentials;

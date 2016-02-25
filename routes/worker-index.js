@@ -24,7 +24,6 @@ var daemon = consumer.create({
         console.log("Type: " + msgType);
         console.log("Content: " + msgContent);
         console.log("Content length: " + msgContent.length);
-        console.log("Content length origin: " + msgBody.content.length);
         console.log("********************************************");
         console.log("\n");
         
@@ -32,17 +31,7 @@ var daemon = consumer.create({
         
         if (msgType == "applySepia") {
             for (var i=0; i<imagesList.length; i++) {
-                /*
-                var fullFilePath = H.downloadS3Image(imagesList[i]);
-                console.log("Image on disk: " + fullFilePath);
-                var lastBackslashIndex = fullFilePath.lastIndexOf("\\") + 1;
-                console.log(lastBackslashIndex);
-                var directory = fullFilePath.substring(0, lastBackslashIndex);
-                var name = fullFilePath.substring(lastBackslashIndex);
-                console.log(directory);
-                console.log(name);
-                */
-                var sepiaImagePath = H.imageGetSepiaUpload(imagesList[i]);
+                H.imageGetSepiaUpload(imagesList[i]);
             }
         }
 

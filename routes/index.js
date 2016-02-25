@@ -10,9 +10,10 @@ var sqs = new AWS.SQS();
 /* GET home page. */
 router.get('/', function(req, res, next) {
     var s3Credentials = H.generateS3Credentials();
+    var fileNameKey = H.s3Prefix + "${filename}";
     res.render('index', { 
         title: 'AWS Project',
-        key: 'piotr.pawlak/${filename}',
+        key: fileNameKey,
         awsAccessKeyId: s3Credentials.s3Key,
         successActionRedirect: s3Credentials.s3Redirect,
         port: PORT,
@@ -35,7 +36,7 @@ router.get('/pictureGallery', function(req, res, next) {
         EncodingType: 'url',
         Marker: 'AA',
         MaxKeys: 1000,
-        Prefix: 'piotr.pawlak/'
+        Prefix: H.s3Prefix
     };
     
     var imagesList = [];
