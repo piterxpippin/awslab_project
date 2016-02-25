@@ -86,7 +86,10 @@ function logUpload() {
 
     simpleDb.putAttributes(putParams, function(err, data) {
         if (err) console.log(err, err.stack); // an error occurred
-        else     console.log(data);           // successful response
+        else {
+            console.log(data);           // successful response
+            getPar();
+        }
     });
 }
 
@@ -186,6 +189,14 @@ function imageGetSepiaUpload(imageKey) {
                                 console.log("Deleting temporary file: " + imageNameAfterSepia);
                                 fs.unlink(imageNameAfterSepia);
                                 console.log("All temp files deleted!");
+                                
+                                var beforeLogging = new Date().toISOString();
+                                console.log("[" + beforeLogging + "] Logging to SimpleDB: successful re-upload of sepia images to S3.");
+                                logUpload();
+                                var afterLogging = new Date().toISOString();
+                                console.log("[" + afterLogging + "] Logging to SimpleDB: successfully re-uploaded sepia image to S3. Checking...");
+                                getPar();
+                                console.log("FINISHED!");
                             });
                         }
                     });

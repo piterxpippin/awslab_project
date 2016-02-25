@@ -22,8 +22,13 @@ router.get('/', function(req, res, next) {
     });
 });
 
-router.get('/logEvent', function(req, res, next) {
+router.get('/logEvent', function(req, res, next) {   
+    var beforeLogging = new Date().toISOString();
+    console.log("[" + beforeLogging + "] Logging to SimpleDB: successful upload of user image to S3.");
     H.logUpload();
+    var afterLogging = new Date().toISOString();
+    console.log("[" + afterLogging + "] Logging to SimpleDB: successfully re-uploaded sepia image to S3. Checking...");
+    H.getPar();
     res.redirect('/');
 });
 
@@ -64,7 +69,7 @@ router.post('/sendToSQS', function(req, res) {
     console.log(req.params);
     
     H.sendSqsMessage("applySepia", JSON.parse(req.body.selectedImages));
-    res.redirect('/pictureGallery');
+    res.redirect('/sendToSQSSuccess');
 });
 
 router.get('/sendToSQSSuccess', function(req, res) {
