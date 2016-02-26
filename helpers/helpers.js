@@ -15,7 +15,7 @@ var sqsURL = "https://sqs.us-west-2.amazonaws.com/983680736795/PawlakSQS";
 var s3URL = "https://s3-us-west-2.amazonaws.com/pawlak-aws-project/";
 var s3Bucket = "pawlak-aws-project";
 var s3Prefix = "piotr.pawlak/";
-var s3TempDirectory = "E:\\aws_temp\\";
+var s3TempDirectory = "aws_temp/";
 
 function getS3Policy() {
     var pathToFile = path.join(__dirname, 'policy.json');

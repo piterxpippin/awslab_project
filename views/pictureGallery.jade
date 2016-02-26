@@ -8,21 +8,20 @@ block content
             p(style = 'text-align: center') Choose images to apply SEPIA EFFECT.
             p(style = 'text-align: center') Then click on "Apply sepia" button to get sepia-ed pictures!
             p#toAppend(style = 'text-align: center') (Max. 10 pictures can be selected. If more is chosen, first 10 selected will be taken!)
-        div
-            button.btn.btn-default(type='submit', onclick="location.href='/';") Back
-            form(action='/sendToSQS', method='POST', class='form-horizontal', enctype='application/json' onsubmit='convertFilenameArrayToString()')
-                input(id='selectedImagesField', type='hidden', name='selectedImages' value='[]')
-                button#applySepiaDown.btn.btn-default(type='submit') Apply sepia
-            br
-            br
-        each val in imagesList
-            div(class = 'divClass')
-                - var imageKey = val.split("/pawlak-aws-project/")[1]
-                img(id = imageKey, src = val)
-                input(id = imageKey, class = 'checkbox-class', type='checkbox' onchange='applyToArray(selectedImages, this)')
-
-    div(class = 'container')
-        button.btn.btn-default(type='submit', onclick="location.href='/';") Back
         form(action='/sendToSQS', method='POST', class='form-horizontal', enctype='application/json' onsubmit='convertFilenameArrayToString()')
             input(id='selectedImagesField', type='hidden', name='selectedImages' value='[]')
-            button#applySepiaDown.btn.btn-default(type='submit') Apply sepia
+            
+            div(class = 'container')
+                a.btn.btn-default( href="/") Back
+                button#applySepiaDown.btn.btn-default(type='submit') Apply sepia
+                br
+                br
+            each val in imagesList
+                div(class = 'divClass')
+                    - var imageKey = val.split("/pawlak-aws-project/")[1]
+                    img(id = imageKey, src = val)
+                    input(id = imageKey, class = 'checkbox-class', type='checkbox' onchange='applyToArray(this)')
+
+            div(class = 'container' style='float:left')
+                a.btn.btn-default( href="/") Back
+                button#applySepiaDown.btn.btn-default(type='submit') Apply sepia

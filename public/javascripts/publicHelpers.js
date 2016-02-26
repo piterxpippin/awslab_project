@@ -1,17 +1,17 @@
-var selectedImages = [];
+var selectedImages = Array();
 
-function applyToArray(arrayToBeAppliedTo, checkbox) {
+function applyToArray(checkbox) {
     if (checkbox.checked == true) {
-        arrayToBeAppliedTo.push(checkbox.id);
+        selectedImages.push(checkbox.id);
     }
     else {
-        var index = arrayToBeAppliedTo.indexOf(checkbox.id);
+        var index = selectedImages.indexOf(checkbox.id);
         if (index > -1) {
-            arrayToBeAppliedTo.splice(index, 1);
+            selectedImages.splice(index, 1);
         }
     }
 
-    console.log(arrayToBeAppliedTo);
+    console.log(selectedImages);
 }
 
 function convertFilenameArrayToString() {

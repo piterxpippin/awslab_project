@@ -1,11 +1,15 @@
-extends layout
+doctype html
+html
+    head
+        title= title
+        meta(charset='utf-8')
+        meta(name='viewport', content='width=device-width, initial-scale=1.0')
 
-block content
-    script(type='text/javascript').
-        $(document).ready(function () {
-            // Handler for .ready() called.
-            window.setTimeout(function () {
-                location.href = "/pictureGallery";
-            }, 5000);
-        });
-    h3 Sepia effect is being applied... You will be redirected to gallery within 5 s.
+        link(rel='stylesheet', href='stylesheets/bootstrap.min.css')
+        link(rel='stylesheet', href='stylesheets/style.css')
+        script(src='javascripts/jquery.min.js')
+        script(src='javascripts/bootstrap.min.js')
+        meta(http-equiv='refresh', content='5;/pictureGallery')
+    body
+    block content
+        h3 Sepia effect is being applied... You will be redirected to gallery within 5 s.
