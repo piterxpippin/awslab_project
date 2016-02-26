@@ -6,12 +6,15 @@ var gm = require('gm');
 
 var IP = "localhost:3000";
 
-var credentials = extractAwsCredentials();
+var credentials = generateS3Credentials();
 
 AWS.config.accessKeyId = credentials.accessKeyId;
 AWS.config.secretAccessKey = credentials.secretAccessKey;
 AWS.config.region = credentials.region;
 AWS.config.logger = process.stdout;
+AWS.config.update({
+  httpOptions: { timeout: 5000 }
+});
 
 var sqsURL = "https://sqs.us-west-2.amazonaws.com/983680736795/PawlakSQS";
 var s3URL = "https://s3-us-west-2.amazonaws.com/pawlak-aws-project/";

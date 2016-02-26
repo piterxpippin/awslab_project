@@ -4,6 +4,10 @@ var AWS = require('aws-sdk');
 var H = require('../helpers/helpers.js');
 var consumer = require('sqs-consumer');
 
+AWS.config.update({
+  httpOptions: { timeout: 5000 }
+});
+
 var PORT = 5000;
 var s3Credentials = H.extractAwsCredentials();
 var sqs = new AWS.SQS();
