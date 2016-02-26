@@ -9,7 +9,7 @@ AWS.config.update({
 });
 
 var PORT = 5000;
-var s3Credentials = H.extractAwsCredentials();
+var s3Credentials = H.generateS3Credentials();
 var sqs = new AWS.SQS();
 
 var messages = [];

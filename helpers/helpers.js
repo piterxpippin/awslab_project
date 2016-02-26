@@ -6,7 +6,7 @@ var gm = require('gm');
 
 var IP = "localhost:3000";
 
-var credentials = generateS3Credentials();
+var credentials = extractAwsCredentials();
 
 AWS.config.accessKeyId = credentials.accessKeyId;
 AWS.config.secretAccessKey = credentials.secretAccessKey;
